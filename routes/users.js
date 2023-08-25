@@ -52,11 +52,17 @@ router.post('/register', (req, res) => {
     } else {
         //Validation needed
         User.findOne({ email: email})
+            //a promise handler that is executed when the asynchronous User.
+            //findOne() operation is completed. It receives the retrieved user document 
+            //(if found) as its argument.
             .then(user => {
                 if(user) {
                   //User exists
                   errors.push({msg: 'Email is already registered'});
                   res.render('register', {
+                    //By passing these variables to the view, the template can pre-fill the form fields 
+                    //with the previously entered data. This helps users to correct any errors without having to 
+                    //re-enter all the information.
                     errors,
                     name,
                     email,
@@ -71,7 +77,11 @@ router.post('/register', (req, res) => {
                     });
 
                     //Hash Password
-                    bcrypt.genSalt(10, (err, salt) => 
+                    
+                    //generates a salt, a random string that is added to the user's password before hashing. 
+                    //adds an extra layer of security to the hashing process. 
+                    //The 10 parameter indicates the number of rounds of salting and hashing to perform. 
+                    bcrypt.genSalt(10, (err, salt) =>   
                         bcrypt.hash(newUser.password, salt, (err, hash) => {
                             if (err) throw err;
 
@@ -90,6 +100,6 @@ router.post('/register', (req, res) => {
       }
 });
 
-//This line exports the router instance as a module,
+//exports the router instance as a module,
 //making it available to other parts of the application
 module.exports = router;

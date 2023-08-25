@@ -3,8 +3,10 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 
 const mongoose = require('mongoose');
-const flash = require('connect-flash'); //Display flash message
-const session = require('express-session');
+const flash = require('connect-flash'); //Display flash message: stored temporarily in the server's memory 
+                                        //and are displayed to the user after a certain event
+const session = require('express-session'); // creates a session object for each user and stores session data on the server side,in memory or in a database, 
+                                            //and associates a unique session ID with each user's session.
 
 const app = express();
 
@@ -36,8 +38,8 @@ app.use(express.urlencoded({ extended: false}));
 //Express Session
 app.use(session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    resave: true, // forces the session to be saved back to the session store. Ensures that the session is saved in each response
+    saveUninitialized: true // allows a new session to be created if the session is new and not modified.
     // cookie: { secure: true }
   }));
 

@@ -4,6 +4,7 @@ const express = require('express');
 // allow us to define and manage routes separately from the main application.
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 // User model
 const User = require('../models/User');
@@ -77,7 +78,7 @@ router.post('/register', (req, res) => {
                     });
 
                     //Hash Password
-                    
+
                     //generates a salt, a random string that is added to the user's password before hashing. 
                     //adds an extra layer of security to the hashing process. 
                     //The 10 parameter indicates the number of rounds of salting and hashing to perform. 
@@ -99,6 +100,35 @@ router.post('/register', (req, res) => {
             });
       }
 });
+
+//Handle Login
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next);
+});
+
+//Handle Logout
+// router.get('/logout', (req, res) => {
+//     req.logOut();
+//     req.flash('success_msg', 'You are logged out');
+//     res.redirect('/users/login');
+// });
+
+router.get('/logout', (req, res) => {
+    req.logOut((err) => {
+        if (err) {
+            res.send(err);
+            // Handle the error if needed
+            return next(err);
+        }
+        req.flash('success_msg', 'You are logged out');
+        res.redirect('/users/login');
+    });
+});
+
 
 //exports the router instance as a module,
 //making it available to other parts of the application

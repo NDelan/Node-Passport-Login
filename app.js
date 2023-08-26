@@ -6,10 +6,14 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash'); //Display flash message: stored temporarily in the server's memory 
                                         //and are displayed to the user after a certain event
 const session = require('express-session'); // creates a session object for each user and stores session data on the server side,in memory or in a database, 
+// const passport = require('./config/passport');
                                             //and associates a unique session ID with each user's session.
+const passport = require('passport');
 
 const app = express();
 
+//Passport config
+require('./config/passport')(passport);
 
 // DB config: connects to database
 const db = require('./config/keys').MongoURI;
@@ -41,7 +45,11 @@ app.use(session({
     resave: true, // forces the session to be saved back to the session store. Ensures that the session is saved in each response
     saveUninitialized: true // allows a new session to be created if the session is new and not modified.
     // cookie: { secure: true }
-  }));
+}));
+
+// Passport middle
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Connect flash
 app.use(flash());
@@ -50,6 +58,7 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 });
 

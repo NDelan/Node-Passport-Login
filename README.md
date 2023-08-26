@@ -26,7 +26,7 @@ $ nmp run dev
 
 Open "config/keys.js" and add your MongoDB URI, local or Atlas
 
-### 👀 Example Running Spaceship Game:
+### 👀 Example Running:
 
 ![GIF Preview](https://media.giphy.com/media/sR4WQRcBjOTs1zCHJj/giphy.gif)
 
